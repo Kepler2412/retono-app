@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retoño · Inventario forestal que funciona sin señal</title>
+<meta name="description" content="Aplicación móvil nativa Android offline-first para el inventario forestal georreferenciado y el seguimiento de supervivencia de siembras en viveros comunitarios de Antioquia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1811;
+    --ink-soft:#1B2A20;
+    --paper:#EDF0E8;
+    --paper-dim:#DDE2D6;
+    --foliage:#2F6B3F;
+    --moss:#7FB069;
+    --ochre:#C9A227;
+    --clay:#8A6F3D;
+    --text:#0E1811;
+    --text-mute:#4C5A50;
+    --display:"Bricolage Grotesque",Georgia,serif;
+    --body:"Source Sans 3",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --measure:64rem;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  }
+
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--text);
+    font-size:clamp(1rem,.96rem + .2vw,1.125rem);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{width:min(100% - 2.5rem,var(--measure));margin-inline:auto}
+
+  /* ---------- tipografía ---------- */
+  h1,h2,h3{font-family:var(--display);line-height:1.05;letter-spacing:-.02em;font-weight:800}
+  h1{font-size:clamp(2.6rem,1.6rem + 4.4vw,5.2rem)}
+  h2{font-size:clamp(1.9rem,1.4rem + 2.2vw,3rem);margin-bottom:.6em}
+  h3{font-size:1.2rem;font-weight:600;letter-spacing:-.01em}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:.72rem;font-weight:600;
+    text-transform:uppercase;letter-spacing:.18em;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--ink);color:var(--paper);
+    padding:clamp(3rem,8vw,6rem) 0 clamp(3.5rem,9vw,7rem);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:auto -20% -55% auto;
+    width:70vw;height:70vw;border-radius:50%;
+    background:radial-gradient(circle,rgba(127,176,105,.16),transparent 62%);
+    pointer-events:none;
+  }
+  .hero .wrap{position:relative;z-index:1}
+  .hero .eyebrow{color:var(--moss);margin-bottom:1.6rem;display:block}
+  .hero h1 .em{color:var(--moss);font-style:italic;font-weight:600}
+  .lede{
+    max-width:46ch;margin-top:1.6rem;font-size:1.16rem;
+    color:#C3CEBE;
+  }
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2.2rem;
+    font-family:var(--mono);font-size:.74rem;
+  }
+  .chip{
+    border:1px solid rgba(237,240,232,.26);border-radius:999px;
+    padding:.35rem .8rem;color:#C3CEBE;
+  }
+
+  /* ---------- demo (elemento signature) ---------- */
+  .demo{
+    margin-top:clamp(2.5rem,6vw,4rem);
+    background:var(--ink-soft);
+    border:1px solid rgba(237,240,232,.14);
+    border-radius:20px;padding:clamp(1.25rem,3vw,2rem);
+  }
+  .demo-head{
+    display:flex;flex-wrap:wrap;gap:1rem;align-items:center;
+    justify-content:space-between;
+    padding-bottom:1rem;margin-bottom:1.25rem;
+    border-bottom:1px solid rgba(237,240,232,.14);
+  }
+  .demo-title{font-family:var(--mono);font-size:.78rem;color:#95A698;letter-spacing:.06em}
+
+  .signal{display:flex;align-items:center;gap:.6rem}
+  .signal-label{font-family:var(--mono);font-size:.8rem;font-weight:600}
+  .signal[data-online="false"] .signal-label{color:var(--ochre)}
+  .signal[data-online="true"] .signal-label{color:var(--moss)}
+
+  .switch{
+    appearance:none;width:52px;height:29px;border-radius:999px;
+    background:#3A4C3F;position:relative;cursor:pointer;
+    border:1px solid rgba(237,240,232,.2);transition:background .25s;
+  }
+  .switch:checked{background:var(--foliage)}
+  .switch::after{
+    content:"";position:absolute;top:2px;left:2px;
+    width:23px;height:23px;border-radius:50%;background:var(--paper);
+    transition:transform .25s;
+  }
+  .switch:checked::after{transform:translateX(23px)}
+  .switch:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+
+  .demo-body{display:grid;gap:1.25rem;grid-template-columns:1fr}
+  @media(min-width:46rem){.demo-body{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}}
+
+  .btn-capture{
+    width:100%;font-family:var(--body);font-size:1rem;font-weight:600;
+    background:var(--moss);color:var(--ink);border:0;border-radius:12px;
+    padding:.95rem 1rem;cursor:pointer;transition:transform .12s,filter .2s;
+  }
+  .btn-capture:hover{filter:brightness(1.07)}
+  .btn-capture:active{transform:translateY(1px)}
+  .btn-capture:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+
+  .hint{
+    font-family:var(--mono);font-size:.72rem;color:#8B9C8E;
+    margin-top:.75rem;line-height:1.5;
+  }
+
+  .queue{
+    background:rgba(14,24,17,.55);border-radius:12px;
+    padding:.9rem;min-height:13.5rem;max-height:13.5rem;overflow-y:auto;
+    display:flex;flex-direction:column;gap:.5rem;
+  }
+  .queue-empty{
+    font-family:var(--mono);font-size:.74rem;color:#6E7F72;
+    margin:auto;text-align:center;padding:1rem;
+  }
+  .rec{
+    display:flex;align-items:center;gap:.7rem;
+    background:rgba(237,240,232,.05);border-radius:9px;
+    padding:.6rem .75rem;font-family:var(--mono);font-size:.72rem;
+    animation:slide .3s ease-out;
+  }
+  @keyframes slide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .rec[data-state="PENDIENTE"] .dot{background:var(--ochre)}
+  .rec[data-state="SINCRONIZADO"] .dot{background:var(--moss)}
+  .rec-id{color:#C3CEBE;font-weight:600}
+  .rec-coord{color:#7C8D80;margin-left:auto;font-size:.68rem}
+  .rec-state{font-size:.62rem;letter-spacing:.08em}
+  .rec[data-state="PENDIENTE"] .rec-state{color:var(--ochre)}
+  .rec[data-state="SINCRONIZADO"] .rec-state{color:var(--moss)}
+
+  .counter{
+    font-family:var(--mono);font-size:.74rem;color:#8B9C8E;
+    margin-top:.85rem;display:flex;justify-content:space-between;gap:1rem;
+  }
+  .counter b{color:var(--paper);font-weight:600}
+
+  /* ---------- secciones claras ---------- */
+  section.pane{padding:clamp(3.5rem,8vw,6rem) 0}
+  .pane .eyebrow{color:var(--foliage);display:block;margin-bottom:1rem}
+  .pane p{max-width:62ch;color:var(--text-mute)}
+  .pane p + p{margin-top:1rem}
+
+  /* cadena de fallas: la secuencia es real, por eso va numerada */
+  .chain{list-style:none;margin-top:2.5rem;display:grid;gap:1px;background:var(--paper-dim);border-radius:14px;overflow:hidden}
+  .chain li{background:var(--paper);padding:1.4rem 1.5rem;display:grid;gap:.35rem;grid-template-columns:auto 1fr;column-gap:1.25rem;align-items:baseline}
+  .chain .num{font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--clay)}
+  .chain h3{grid-column:2}
+  .chain p{grid-column:2;margin:0;font-size:.95rem}
+
+  .dark{background:var(--ink);color:var(--paper)}
+  .dark .eyebrow{color:var(--moss)}
+  .dark p{color:#B3BFB4}
+
+  .grid{display:grid;gap:1rem;margin-top:2.5rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
+  .card{
+    background:rgba(237,240,232,.05);border:1px solid rgba(237,240,232,.13);
+    border-radius:14px;padding:1.4rem;
+  }
+  .card h3{color:var(--paper);margin-bottom:.5rem}
+  .card p{font-size:.93rem;margin:0}
+  .card .tag{font-family:var(--mono);font-size:.68rem;color:var(--moss);letter-spacing:.1em;display:block;margin-bottom:.7rem}
+
+  /* métricas */
+  .metrics{display:grid;gap:1.5rem;margin-top:2.5rem;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))}
+  .metric .val{font-family:var(--display);font-size:clamp(2.4rem,1.6rem + 2.6vw,3.4rem);font-weight:800;color:var(--foliage);line-height:1}
+  .metric .lbl{font-size:.9rem;color:var(--text-mute);margin-top:.45rem;max-width:22ch}
+
+  /* stack */
+  .stack{width:100%;border-collapse:collapse;margin-top:2.5rem;font-size:.95rem}
+  .stack th,.stack td{text-align:left;padding:.85rem .4rem;border-bottom:1px solid var(--paper-dim)}
+  .stack th{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-mute);font-weight:600}
+  .stack td:first-child{font-weight:600;white-space:nowrap}
+  .stack td:last-child{color:var(--text-mute)}
+
+  /* cierre */
+  .links{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2.2rem}
+  .lnk{
+    font-family:var(--body);font-weight:600;font-size:.95rem;
+    padding:.8rem 1.3rem;border-radius:11px;text-decoration:none;
+    transition:filter .2s;
+  }
+  .lnk-primary{background:var(--moss);color:var(--ink)}
+  .lnk-ghost{border:1px solid rgba(237,240,232,.3);color:var(--paper)}
+  .lnk:hover{filter:brightness(1.1)}
+  .lnk:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+
+  footer{border-top:1px solid rgba(237,240,232,.14);margin-top:3.5rem;padding-top:1.8rem;font-family:var(--mono);font-size:.74rem;color:#7C8D80}
+  footer p + p{margin-top:.4rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Diseño de Aplicaciones Móviles · Católica del Norte</span>
+    <h1>El dato nace donde <span class="em">no hay señal</span>.</h1>
+    <p class="lede">
+      Retoño es una aplicación Android que registra cada árbol sembrado con su
+      coordenada exacta, funcione o no la conexión. La base de datos del teléfono
+      es la fuente de verdad; la red llega después.
+    </p>
+
+    <div class="meta-row">
+      <span class="chip">Kotlin + Jetpack Compose</span>
+      <span class="chip">Room · SQLCipher</span>
+      <span class="chip">WorkManager</span>
+      <span class="chip">Clean Architecture</span>
+    </div>
+
+    <!-- Demostración interactiva: es el argumento del proyecto, no un adorno -->
+    <div class="demo">
+      <div class="demo-head">
+        <span class="demo-title">Simulación · registro en campo</span>
+        <div class="signal" id="signal" data-online="true">
+          <span class="signal-label" id="signalLabel">Con señal</span>
+          <input type="checkbox" class="switch" id="switch" checked
+                 role="switch" aria-checked="true"
+                 aria-label="Alternar conectividad de la simulación">
+        </div>
+      </div>
+
+      <div class="demo-body">
+        <div>
+          <button class="btn-capture" id="capture">Registrar un árbol</button>
+          <p class="hint" id="hint">
+            Apague la señal y registre varios árboles. La app responde igual.
+            Vuelva a encenderla y observe la cola vaciarse sola.
+          </p>
+        </div>
+
+        <div>
+          <div class="queue" id="queue" aria-live="polite">
+            <p class="queue-empty" id="queueEmpty">Sin registros todavía</p>
+          </div>
+          <p class="counter">
+            <span>Pendientes: <b id="cPend">0</b></span>
+            <span>Sincronizados: <b id="cSync">0</b></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="pane">
+  <div class="wrap">
+    <span class="eyebrow">El problema</span>
+    <h2>Restaurar no termina con la siembra.</h2>
+    <p>
+      Antioquia es el departamento de la región andina con mayor superficie
+      deforestada del país. Los programas que responden a esa situación no se
+      ejecutan desde una oficina: operan a través de viveros comunitarios y de
+      familias vinculadas a esquemas de pago por servicios ambientales.
+    </p>
+    <p>
+      El indicador que determina si una intervención funcionó, y el que las
+      entidades financiadoras exigen para verificar la ejecución, es la tasa de
+      supervivencia por lote y por especie. Ese dato nace en campo, y ahí es
+      donde el proceso se rompe.
+    </p>
+
+    <ol class="chain">
+      <li>
+        <span class="num">01</span>
+        <h3>Se captura en papel, bajo lluvia</h3>
+        <p>Planillas que se deterioran, se pierden o quedan ilegibles. Sin coordenadas del individuo.</p>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <h3>Se transcribe días después</h3>
+        <p>Reproceso manual en una hoja de cálculo, con los errores de digitación que eso arrastra.</p>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <h3>Se consolida tarde y mal</h3>
+        <p>Archivos dispersos por proyecto, versiones inconsistentes y ninguna forma de saber si el árbol de la visita 3 es el mismo de la visita 1.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="pane dark">
+  <div class="wrap">
+    <span class="eyebrow">La solución</span>
+    <h2>Cuatro decisiones de arquitectura.</h2>
+    <p>
+      Cada una responde a una falla concreta de la cadena anterior. Ninguna es
+      una preferencia técnica.
+    </p>
+
+    <div class="grid">
+      <article class="card">
+        <span class="tag">ADR-001</span>
+        <h3>La base local es la verdad</h3>
+        <p>La interfaz observa Room, nunca la red. No hay pantallas de carga ni errores por falta de señal, porque la señal no participa en la operación.</p>
+      </article>
+      <article class="card">
+        <span class="tag">ADR-002</span>
+        <h3>Identificadores del cliente</h3>
+        <p>Cada árbol recibe un UUID generado en el teléfono. Varios dispositivos registran a la vez, sin coordinación y sin colisiones al sincronizar.</p>
+      </article>
+      <article class="card">
+        <span class="tag">ADR-003</span>
+        <h3>Trabajo que sobrevive al reinicio</h3>
+        <p>WorkManager persiste la cola. Se puede registrar toda una jornada, quedarse sin batería y encontrar todo sincronizado por la mañana.</p>
+      </article>
+      <article class="card">
+        <span class="tag">ADR-004</span>
+        <h3>Conflictos visibles</h3>
+        <p>Un registro rechazado no se descarta en silencio: queda marcado y a la vista. Estos datos sustentan verificación ante financiadores.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pane">
+  <div class="wrap">
+    <span class="eyebrow">Metas verificables</span>
+    <h2>Qué se compromete a demostrar.</h2>
+    <p>
+      Las cifras no son aspiraciones: son las métricas con las que se evalúa el
+      pilotaje de ocho semanas.
+    </p>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="val">98 %</div>
+        <p class="lbl">de los registros capturados sin red llegan al servidor</p>
+      </div>
+      <div class="metric">
+        <div class="val">&lt; 24 h</div>
+        <p class="lbl">para consolidar la tasa de supervivencia de un lote</p>
+      </div>
+      <div class="metric">
+        <div class="val">&gt; 75</div>
+        <p class="lbl">puntos en la escala SUS de usabilidad</p>
+      </div>
+      <div class="metric">
+        <div class="val">70 %</div>
+        <p class="lbl">de cobertura de pruebas sobre la capa de dominio</p>
+      </div>
+    </div>
+
+    <table class="stack">
+      <caption class="sr-only"></caption>
+      <thead>
+        <tr><th>Componente</th><th>Tecnología</th><th>Por qué</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Interfaz</td><td>Jetpack Compose</td><td>Declarativa; el estado de la pantalla se deriva de la base local</td></tr>
+        <tr><td>Persistencia</td><td>Room sobre SQLite</td><td>Consultas verificadas en compilación; emite cambios como flujo</td></tr>
+        <tr><td>Cifrado</td><td>SQLCipher + Keystore</td><td>AES-256 en reposo; el .db es ilegible fuera de la app</td></tr>
+        <tr><td>Sincronización</td><td>WorkManager</td><td>Persiste a reinicios; el sistema decide cuándo hay red</td></tr>
+        <tr><td>Arquitectura</td><td>Clean + MVVM</td><td>Dominio en Kotlin puro, probable sin emulador</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="pane dark" id="repo">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 1 · Taller ABP</span>
+    <h2>Código, documentación y evidencias.</h2>
+    <p>
+      El repositorio incluye el código fuente, los registros de decisión
+      arquitectónica, el manual de despliegue y la presentación del proyecto.
+    </p>
+
+    <div class="links">
+      <a class="lnk lnk-primary" href="https://github.com/usuario/retono-app">Ver repositorio</a>
+      <a class="lnk lnk-ghost" href="https://github.com/usuario/retono-app/blob/main/docs/01-formulario-entrega1.md">Documento maestro</a>
+      <a class="lnk lnk-ghost" href="https://github.com/usuario/retono-app/tree/main/presentacion">Presentación</a>
+    </div>
+
+    <footer>
+      <p>Yeison Alberto Gómez Amaya</p>
+      <p>Facultad de Ingeniería y Ciencias Ambientales · Fundación Universitaria Católica del Norte</p>
+      <p>Diseño de Aplicaciones Móviles · 2026</p>
+    </footer>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  // Coordenadas dentro del oriente antioqueño, zona de los viveros del proyecto.
+  var BASE_LAT = 6.1892, BASE_LON = -75.2153;
+
+  var online = true;
+  var seq = 0;
+  var registros = [];
+
+  var $switch = document.getElementById('switch');
+  var $signal = document.getElementById('signal');
+  var $label  = document.getElementById('signalLabel');
+  var $queue  = document.getElementById('queue');
+  var $empty  = document.getElementById('queueEmpty');
+  var $cap    = document.getElementById('capture');
+  var $hint   = document.getElementById('hint');
+  var $pend   = document.getElementById('cPend');
+  var $sync   = document.getElementById('cSync');
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function coord() {
+    var lat = BASE_LAT + (Math.random() - 0.5) * 0.004;
+    var lon = BASE_LON + (Math.random() - 0.5) * 0.004;
+    return lat.toFixed(5) + ', ' + lon.toFixed(5);
+  }
+
+  function render() {
+    $queue.querySelectorAll('.rec').forEach(function (n) { n.remove(); });
+    $empty.hidden = registros.length > 0;
+
+    registros.slice().reverse().forEach(function (r) {
+      var el = document.createElement('div');
+      el.className = 'rec';
+      el.setAttribute('data-state', r.estado);
+      el.innerHTML =
+        '<span class="dot"></span>' +
+        '<span class="rec-id">' + r.id + '</span>' +
+        '<span class="rec-state">' + r.estado + '</span>' +
+        '<span class="rec-coord">' + r.coord + '</span>';
+      $queue.appendChild(el);
+    });
+
+    var pendientes = registros.filter(function (r) { return r.estado === 'PENDIENTE'; }).length;
+    $pend.textContent = pendientes;
+    $sync.textContent = registros.length - pendientes;
+  }
+
+  function sincronizar() {
+    var pendientes = registros.filter(function (r) { return r.estado === 'PENDIENTE'; });
+    if (!pendientes.length) return;
+
+    if (reduceMotion) {
+      pendientes.forEach(function (r) { r.estado = 'SINCRONIZADO'; });
+      render();
+      return;
+    }
+
+    // Se sincronizan de a uno para que la cola se vea vaciarse, igual que
+    // el envío por lotes del SyncWorker informa registro por registro.
+    pendientes.forEach(function (r, i) {
+      setTimeout(function () {
+        if (!online) return;      // si se cortó la señal, el envío se detiene
+        r.estado = 'SINCRONIZADO';
+        render();
+      }, 260 * (i + 1));
+    });
+  }
+
+  $cap.addEventListener('click', function () {
+    seq += 1;
+    registros.push({
+      id: 'SIE-' + String(seq).padStart(3, '0'),
+      coord: coord(),
+      estado: online ? 'SINCRONIZADO' : 'PENDIENTE'
+    });
+    if (registros.length > 24) registros.shift();
+    render();
+  });
+
+  $switch.addEventListener('change', function () {
+    online = $switch.checked;
+    $switch.setAttribute('aria-checked', String(online));
+    $signal.setAttribute('data-online', String(online));
+    $label.textContent = online ? 'Con señal' : 'Sin señal';
+    $hint.textContent = online
+      ? 'Apague la señal y registre varios árboles. La app responde igual. Vuelva a encenderla y observe la cola vaciarse sola.'
+      : 'Está en modo sin cobertura. Registre los que quiera: nada se pierde y nada se bloquea.';
+    if (online) sincronizar();
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

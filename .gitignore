@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Configuración local: rutas del SDK y URL del backend
+local.properties
+
+# Credenciales de Firebase: contienen identificadores del proyecto
+google-services.json
+
+# Firma de la aplicación: nunca versionar
+*.jks
+*.keystore
+keystore.properties
+
+# Artefactos de compilación
+*.apk
+*.aab
+*.ap_
+*.dex
+output.json
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

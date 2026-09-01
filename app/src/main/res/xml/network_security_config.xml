@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+      Prohíbe el tráfico en texto plano en toda la aplicación.
+      Con esto activo, cualquier petición HTTP sin TLS falla en tiempo de
+      ejecución en lugar de enviar datos legibles por la red.
+    -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!--
+      FIJACIÓN DE CERTIFICADO (pinning)
+
+      Deshabilitada mientras no exista un backend real. Un <pin-set> con valores
+      de ejemplo no protege nada y hace fallar toda conexión al dominio, así que
+      es preferible dejarlo documentado y desactivado.
+
+      Para activarlo cuando tenga backend:
+        1. Obtenga el pin de su certificado:
+           openssl s_client -servername SU_DOMINIO -connect SU_DOMINIO:443 \
+             | openssl x509 -pubkey -noout \
+             | openssl pkey -pubin -outform der \
+             | openssl dgst -sha256 -binary | openssl enc -base64
+        2. Repita con el certificado de respaldo (imprescindible: sin un pin
+           de reserva, la renovación del certificado deja la app sin conexión).
+        3. Descomente el bloque y reemplace dominio y pines.
+
+      <domain-config cleartextTrafficPermitted="false">
+          <domain includeSubdomains="true">api.retono.example.com</domain>
+          <pin-set expiration="2027-12-31">
+              <pin digest="SHA-256">PIN_PRINCIPAL_EN_BASE64</pin>
+              <pin digest="SHA-256">PIN_DE_RESPALDO_EN_BASE64</pin>
+          </pin-set>
+      </domain-config>
+    -->
+</network-security-config>

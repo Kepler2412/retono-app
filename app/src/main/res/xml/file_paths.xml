@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--
+      Se expone únicamente la subcarpeta de fotos dentro del almacenamiento
+      privado de la aplicación. No se declara external-path: las imágenes de
+      campo no deben quedar en almacenamiento compartido, donde cualquier
+      aplicación con permiso de lectura podría verlas.
+    -->
+    <files-path name="fotos" path="fotos/" />
+</paths>

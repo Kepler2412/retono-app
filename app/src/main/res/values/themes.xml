@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Tema base solo para la ventana antes de que Compose tome el control.
+      El aspecto real de la aplicación lo define RetonoTheme en Kotlin.
+      NoActionBar porque Compose dibuja su propia barra superior.
+    -->
+    <style name="Theme.Retono" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/foliage</item>
+        <item name="android:navigationBarColor">@color/paper</item>
+    </style>
+</resources>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Retoño</string>
+
+    <string name="nav_lotes">Lotes</string>
+    <string name="nav_registro">Registrar</string>
+    <string name="nav_sync">Sincronizar</string>
+
+    <string name="permiso_ubicacion_motivo">Retoño necesita la ubicación para georreferenciar cada árbol sembrado y poder vincular los monitoreos posteriores al mismo individuo.</string>
+
+    <string name="sync_pendientes">%1$d registros esperan conexión</string>
+    <string name="sync_al_dia">Todo sincronizado</string>
+    <string name="vacio_lotes">Aún no hay lotes. Cree el primero para empezar a registrar siembras.</string>
+</resources>

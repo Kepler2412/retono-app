@@ -1,0 +1,89 @@
+rules_version = '2';
+
+/*
+ * Reglas de seguridad de Cloud Firestore para Retoño.
+ *
+ * Publíquelas en la consola: Firestore Database → Reglas → pegar → Publicar.
+ *
+ * NUNCA deje la base en "modo de prueba". Ese modo permite lectura y escritura
+ * a cualquiera en internet durante 30 días y luego cierra todo de golpe. Con la
+ * clave de API visible en el APK, una base abierta es una base pública.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function esElAutor() {
+      return request.auth.uid == request.resource.data.registradoPor;
+    }
+
+    function camposObligatoriosPresentes() {
+      return request.resource.data.keys().hasAll([
+        'id', 'loteId', 'especieId', 'latitud', 'longitud',
+        'fechaSiembra', 'actualizadoEn', 'registradoPor'
+      ]);
+    }
+
+    function coordenadasValidas() {
+      return request.resource.data.latitud is number
+          && request.resource.data.latitud >= -90
+          && request.resource.data.latitud <= 90
+          && request.resource.data.longitud is number
+          && request.resource.data.longitud >= -180
+          && request.resource.data.longitud <= 180;
+    }
+
+    match /lotes/{loteId} {
+      allow read: if autenticado();
+      allow create: if autenticado() && esElAutor();
+      // Un lote lo puede corregir cualquier usuario autenticado del vivero:
+      // el área o el nombre de un lote son datos compartidos del equipo, no
+      // propiedad de quien lo creó.
+      allow update: if autenticado()
+                    && request.resource.data.actualizadoEn >= resource.data.actualizadoEn;
+      allow delete: if false;
+    }
+
+    match /siembras/{siembraId} {
+      // Cualquier usuario autenticado puede consultar el inventario: el
+      // monitoreo de un lote suele hacerlo alguien distinto de quien sembró.
+      allow read: if autenticado();
+
+      // Escribir exige sesión, autoría propia y datos válidos. La validación
+      // se repite en el servidor porque la del cliente se puede eludir.
+      allow create: if autenticado()
+                    && esElAutor()
+                    && camposObligatoriosPresentes()
+                    && coordenadasValidas()
+                    && request.resource.data.id == siembraId;
+
+      // Solo el autor modifica su registro, y solo hacia adelante en el tiempo:
+      // impide que un reloj desajustado sobrescriba datos más recientes.
+      allow update: if autenticado()
+                    && esElAutor()
+                    && resource.data.registradoPor == request.auth.uid
+                    && request.resource.data.actualizadoEn >= resource.data.actualizadoEn;
+
+      // No se permite borrar desde la aplicación. Un registro de campo es
+      // evidencia de ejecución; su eliminación es una decisión administrativa
+      // que se hace desde la consola, no desde un teléfono en el monte.
+      allow delete: if false;
+    }
+
+    match /monitoreos/{monitoreoId} {
+      allow read: if autenticado();
+      allow create: if autenticado() && esElAutor();
+      allow update: if autenticado()
+                    && resource.data.registradoPor == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // Todo lo no declarado queda denegado. Regla de cierre explícita.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
