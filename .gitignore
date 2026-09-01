@@ -13,8 +13,6 @@ captures/
 # Configuración local: rutas del SDK y URL del backend
 local.properties
 
-# Credenciales de Firebase: contienen identificadores del proyecto
-google-services.json
 
 # Firma de la aplicación: nunca versionar
 *.jks
