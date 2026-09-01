@@ -147,9 +147,12 @@ Declararlas es parte de la evidencia, no una omisión de ella.
 
 ## 8. Repositorio
 
+**URL del repositorio:** https://github.com/Kepler2412/retono-app
+
 | Elemento | Estado |
 |---|---|
-| Visibilidad pública verificada | ☐ |
+| Repositorio publicado | ☑ |
+| Visibilidad pública verificada | ☑ |
 | README con diagramas Mermaid renderizados | ☐ |
 | Presentación en `/presentacion` | ☐ |
 | Reglas de Firestore versionadas en `/firebase` | ☐ |

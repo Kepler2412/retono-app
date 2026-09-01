@@ -101,14 +101,17 @@ Deje esa ventana abierta: la usará de nuevo más adelante.
 
 ## Paso 8 · Probar el flujo completo
 
-1. Vaya a la pestaña **Registrar**.
-2. Escoja una especie (aparecen diez nativas de Antioquia precargadas).
-3. Toque **Tomar ubicación**. Android pedirá el permiso: concédalo.
-4. Debe aparecer la coordenada con su precisión. El botón **Registrar árbol** se habilita.
-5. Registre el árbol. Verá el mensaje de confirmación.
-6. Vaya a **Sincronizar**: el registro aparece como **Pendiente**, con el contador en la barra inferior.
+1. **Cree una cuenta** en la pantalla de inicio de sesión. Requiere internet solo esta vez.
+2. En **Lotes** verá el lote de demostración precargado, marcado como activo con borde verde. Puede editarlo con el lápiz o crear otro con el botón **+**.
+3. Vaya a **Registrar**. Escoja una especie: hay diez nativas de Antioquia precargadas.
+4. Toque **Tomar ubicación**. Android pedirá el permiso: concédalo. Debe aparecer la coordenada con su precisión.
+5. Opcionalmente tome una fotografía. En el emulador, la cámara virtual muestra una escena 3D; funciona igual.
+6. Registre el árbol. El botón se habilita solo cuando hay especie, lote activo y precisión suficiente.
+7. En **Monitorear**, toque el árbol y registre una visita. Si lo marca como vivo puede anotar altura y diámetro.
+8. Vuelva a **Lotes**: ahí aparece la tasa de supervivencia calculada localmente.
+9. En **Sincronizar** verá el estado de cada registro y podrá forzar un envío.
 
-El registro queda en pendiente porque no hay backend. **Eso es lo correcto**: es exactamente el comportamiento que el proyecto busca demostrar.
+Verifique en la consola de Firebase que aparecen las colecciones `lotes`, `siembras` y `monitoreos`.
 
 ---
 
@@ -152,21 +155,34 @@ También puede hacer clic derecho sobre `CalcularSupervivenciaLoteTest.kt` y ele
 | `SDK location not found` | Falta `local.properties`. Android Studio lo crea al sincronizar; si no, créelo en la raíz con `sdk.dir=RUTA_A_SU_SDK`. |
 | `Failed to resolve: androidx...` | Sin internet durante la sincronización, o un proxy bloqueando. Reintente con *Sync Project*. |
 | La app instala pero se cierra al abrir | Revise el **Logcat** filtrando por `co.edu.ucn.retono` y comparta el stack trace. |
+| El registro de usuario falla | Falta habilitar Correo/contraseña en **Authentication → Sign-in method**. |
+| Permiso denegado al sincronizar | Las reglas de Firestore no están publicadas. Vea `firebase/firestore.rules`. |
+| `No matching client found for package name` | El `applicationId` no coincide con el `package_name` del `google-services.json`. No agregue sufijos a la variante de depuración. |
+| Advertencia de alineamiento a 16 KB | Proviene de SQLCipher 4.5.4. No afecta la ejecución; solo importaría al publicar en Play. |
 | "No se obtuvo señal de GPS" siempre | El emulador no tiene ubicación (Paso 7) o la imagen no es de Google Play (Paso 5). |
 | El emulador va lentísimo | Active la virtualización por hardware en la BIOS (Intel VT-x o AMD-V). |
 
 ---
 
-## Después, cuando cree el repositorio
+## Repositorio
+
+El proyecto está publicado en https://github.com/Kepler2412/retono-app con visibilidad pública.
+
+Para clonarlo:
 
 ```bash
+git clone https://github.com/Kepler2412/retono-app.git
 cd retono-app
-git init
-git add .
-git commit -m "Retoño: MVP offline-first de inventario forestal"
-git branch -M main
-git remote add origin https://github.com/SU_USUARIO/retono-app.git
-git push -u origin main
 ```
 
-El `.gitignore` ya excluye `local.properties`, la carpeta `build/` y los archivos de firma. **Verifique que el repositorio quede en visibilidad pública** antes de entregar el enlace en Canvas.
+Recuerde que tras clonar necesita crear su propio `local.properties` (Android Studio lo genera al sincronizar) y, si desea sincronización remota, su propio `google-services.json`.
+
+### Trabajar sobre el repositorio
+
+```bash
+git add .
+git commit -m "Descripcion del cambio"
+git push
+```
+
+El `.gitignore` excluye `local.properties`, las carpetas `build/` y los archivos de firma. Antes de cada `push` conviene revisar `git status --short` para confirmar que no se cuela nada que no deba versionarse.

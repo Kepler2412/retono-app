@@ -15,7 +15,7 @@ Espacio en disco recomendado: 10 GB entre el SDK, el emulador y la caché de Gra
 ## 2. Obtener el proyecto
 
 ```bash
-git clone https://github.com/<usuario>/retono-app.git
+git clone https://github.com/Kepler2412/retono-app.git
 cd retono-app
 ```
 

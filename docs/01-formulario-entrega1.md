@@ -52,13 +52,13 @@ La articulación de las tres capas produce un ciclo de retroalimentación corto:
 
 ### 1.5 Enlaces del proyecto
 
-| Recurso | Enlace |
-|---|---|
-| Repositorio GitHub | `https://github.com/<usuario>/retono-app` |
-| Prototipo Figma | `https://figma.com/<enlace-del-prototipo>` |
-| Landing page del proyecto | `https://retono-app.netlify.app` |
+| Recurso | Enlace | Estado |
+|---|---|---|
+| Repositorio GitHub | https://github.com/Kepler2412/retono-app | Publicado, visibilidad pública verificada |
+| Landing page del proyecto | `pendiente de despliegue` | Código listo en `landing/index.html` |
+| Prototipo Figma | `pendiente` | Sprint 0 en curso |
 
-> Reemplace los marcadores por las URL definitivas antes de la entrega y **verifique que el repositorio esté en visibilidad pública**: la guía advierte que los enlaces con acceso restringido no se califican.
+El repositorio es el entregable que se califica y ya está en línea con visibilidad pública. La landing page está construida y lista para desplegar en Netlify apuntando al directorio `landing/`; el prototipo de Figma corresponde al Sprint 0, aún en curso.
 
 ---
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "839587286744",
+    "project_id": "retono-f8b1c",
+    "storage_bucket": "retono-f8b1c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839587286744:android:4bf18c2795af08cfd991ad",
+        "android_client_info": {
+          "package_name": "co.edu.ucn.retono"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOMniMDFv6Umm8MFnPEjNQWHN-38xRqUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
