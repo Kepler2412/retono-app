@@ -43,7 +43,7 @@ La articulación de las tres capas produce un ciclo de retroalimentación corto:
 
 | Sprint | Semanas | Objetivo del incremento | Entregable verificable | Estado |
 |---|---|---|---|---|
-| Sprint 0 | 1–2 | Descubrimiento y diseño | Mapa de empatía, *user journey*, wireframes y prototipo interactivo en Figma | En curso |
+| Sprint 0 | 1–2 | Descubrimiento y diseño | Mapa de empatía, *user journey*, wireframes y prototipo interactivo en Figma | Completado |
 | Sprint 1 | 3–4 | Núcleo de persistencia local | Base Room cifrada operativa, administración de lotes y registro de siembras sin red | Completado |
 | Sprint 2 | 5–6 | Captura enriquecida en campo | Georreferenciación GPS con validación de precisión, fotografía procesada, formulario de monitoreo | Completado |
 | Sprint 3 | 7–8 | Sincronización y endurecimiento | Autenticación, motor de sincronización con WorkManager y Firestore, reglas de seguridad, pruebas | Completado |
