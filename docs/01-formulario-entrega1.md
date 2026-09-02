@@ -56,7 +56,8 @@ La articulación de las tres capas produce un ciclo de retroalimentación corto:
 |---|---|---|
 | Repositorio GitHub | https://github.com/Kepler2412/retono-app | Publicado, visibilidad pública verificada |
 | Landing page del proyecto | `pendiente de despliegue` | Código listo en `landing/index.html` |
-| Prototipo Figma | `pendiente` | Sprint 0 en curso |
+| Especificación de diseño | `docs/06-diseno-ux.md` | Sistema de diseño y seis maquetas de alta fidelidad |
+| Prototipo Figma | `pendiente de publicar` | Reconstruible desde la especificación; instrucciones en el §5 de ese documento |
 
 El repositorio es el entregable que se califica y ya está en línea con visibilidad pública. La landing page está construida y lista para desplegar en Netlify apuntando al directorio `landing/`; el prototipo de Figma corresponde al Sprint 0, aún en curso.
 

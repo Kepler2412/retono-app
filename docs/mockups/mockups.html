@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retoño · Maquetas de alta fidelidad</title>
+<style>
+  :root{
+    --foliage:#2F6B3F; --moss:#7FB069; --ink:#0E1811; --ink-soft:#1B2A20;
+    --paper:#EDF0E8; --paper-dim:#DDE2D6; --mute:#4C5A50;
+    --ochre:#C9A227; --clay:#B4553A; --white:#FFFFFF;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#20261F;color:var(--paper);font-family:var(--sans);padding:40px 24px 80px}
+
+  header{max-width:1200px;margin:0 auto 48px}
+  h1{font-size:2rem;font-weight:800;letter-spacing:-.02em}
+  header p{color:#9DAB9F;margin-top:8px;max-width:62ch;line-height:1.6}
+
+  .grid{
+    max-width:1200px;margin:0 auto;
+    display:grid;gap:56px 40px;
+    grid-template-columns:repeat(auto-fit,minmax(300px,340px));
+    justify-content:center;
+  }
+  .item{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .cap{text-align:center}
+  .cap b{display:block;font-size:.95rem;font-weight:600}
+  .cap span{display:block;font-family:var(--mono);font-size:.7rem;color:#8B9C8E;margin-top:3px;letter-spacing:.06em}
+
+  /* ---------- marco del teléfono ---------- */
+  .phone{
+    width:320px;height:672px;border-radius:32px;
+    background:var(--paper);color:var(--ink);
+    border:9px solid #0A0F0B;box-shadow:0 18px 40px rgba(0,0,0,.45);
+    overflow:hidden;display:flex;flex-direction:column;position:relative;
+    font-size:13px;
+  }
+  .status{
+    height:26px;flex:0 0 auto;display:flex;align-items:center;
+    justify-content:space-between;padding:0 14px;
+    font-family:var(--mono);font-size:9.5px;color:var(--mute);
+  }
+  .body{flex:1;overflow:hidden;padding:14px 16px;display:flex;flex-direction:column;gap:11px}
+  .body.dark{background:var(--paper)}
+
+  h2.t{font-size:20px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+  .sub{font-size:11.5px;color:var(--mute);line-height:1.4}
+  .lbl{font-size:12.5px;font-weight:600}
+
+  .card{background:var(--paper-dim);border-radius:11px;padding:12px}
+  .card.w{background:var(--white)}
+  .card.active{border:2px solid var(--foliage)}
+
+  .btn{
+    border:0;border-radius:9px;padding:11px;text-align:center;
+    font-size:13px;font-weight:600;background:var(--foliage);color:var(--paper);
+  }
+  .btn.ghost{background:transparent;border:1.4px solid var(--foliage);color:var(--foliage)}
+  .btn.off{background:#C4CCC0;color:#7E8A80}
+
+  .field{
+    border:1.4px solid #B9C2B4;border-radius:9px;padding:9px 11px;
+    font-size:12.5px;color:var(--mute);background:var(--white);
+  }
+  .field .fl{display:block;font-size:9.5px;color:var(--foliage);margin-bottom:2px}
+
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{
+    border:1.2px solid #B9C2B4;border-radius:999px;
+    padding:5px 11px;font-size:11px;white-space:nowrap;
+  }
+  .chip.on{background:var(--foliage);color:var(--paper);border-color:var(--foliage)}
+
+  .tag{
+    display:inline-flex;align-items:center;gap:5px;border-radius:999px;
+    padding:3px 9px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;
+  }
+  .tag i{width:6px;height:6px;border-radius:50%;display:block}
+  .t-pend{background:rgba(201,162,39,.18);color:#8A6F1B}
+  .t-pend i{background:var(--ochre)}
+  .t-sync{background:rgba(127,176,105,.22);color:#41662E}
+  .t-sync i{background:var(--moss)}
+  .t-conf{background:rgba(180,85,58,.16);color:#8C3F2B}
+  .t-conf i{background:var(--clay)}
+
+  .bar{
+    flex:0 0 auto;height:56px;background:var(--white);
+    border-top:1px solid var(--paper-dim);
+    display:grid;grid-template-columns:repeat(4,1fr);align-items:center;
+  }
+  .tab{text-align:center;font-size:9px;color:var(--mute);position:relative}
+  .tab .ic{display:block;font-size:16px;line-height:1.3}
+  .tab.on{color:var(--foliage);font-weight:700}
+  .badge{
+    position:absolute;top:-2px;right:50%;transform:translateX(20px);
+    background:var(--clay);color:#fff;border-radius:999px;
+    font-size:8px;padding:1px 5px;font-weight:700;
+  }
+
+  .prog{height:6px;background:#C4CCC0;border-radius:999px;overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--foliage)}
+
+  .fab{
+    position:absolute;right:16px;bottom:70px;width:50px;height:50px;
+    border-radius:16px;background:var(--foliage);color:var(--paper);
+    display:grid;place-items:center;font-size:24px;
+    box-shadow:0 6px 14px rgba(0,0,0,.25);
+  }
+
+  /* diálogo modal sobre la pantalla */
+  .scrim{position:absolute;inset:0;background:rgba(14,24,17,.45);display:grid;place-items:center;padding:18px}
+  .modal{background:var(--paper);border-radius:16px;padding:16px;width:100%;display:flex;flex-direction:column;gap:10px}
+  .modal h3{font-size:15px;font-weight:700}
+  .modal .acts{display:flex;justify-content:flex-end;gap:14px;margin-top:2px}
+  .modal .acts span{font-size:12.5px;font-weight:600;color:var(--foliage)}
+  .modal .acts .mute{color:var(--mute)}
+
+  .photo{
+    height:96px;border-radius:9px;
+    background:linear-gradient(150deg,#3F6B45,#7FB069 55%,#A8C48E);
+    display:grid;place-items:center;color:rgba(255,255,255,.85);font-size:10px;
+  }
+  .note{font-size:10.5px;color:var(--mute);line-height:1.45}
+  .warn{font-size:10.5px;color:#8A6F1B;line-height:1.45}
+  .err{font-size:10.5px;color:var(--clay);line-height:1.45}
+  .big{font-size:22px;font-weight:800;color:var(--foliage)}
+  .row{display:flex;justify-content:space-between;align-items:flex-end}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Retoño · Maquetas de alta fidelidad</h1>
+  <p>Seis pantallas a escala 320 × 672. Los colores, tipografías y componentes corresponden al sistema de diseño implementado en Jetpack Compose. Para exportar cada pantalla como imagen, use la captura de área del sistema operativo o imprima esta página a PDF.</p>
+</header>
+
+<div class="grid">
+
+  <!-- ============ 1. LOGIN ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>▮▮▮ 87%</span></div>
+      <div class="body" style="justify-content:center;text-align:center;gap:14px">
+        <div>
+          <h2 class="t" style="color:var(--foliage)">Retoño</h2>
+          <p class="sub" style="margin-top:5px">Inventario forestal de viveros comunitarios</p>
+        </div>
+        <div class="field" style="text-align:left;margin-top:14px">
+          <span class="fl">Correo</span>tecnico@vivero.co
+        </div>
+        <div class="field" style="text-align:left">
+          <span class="fl">Contraseña</span>••••••••
+        </div>
+        <div class="btn" style="margin-top:6px">Entrar</div>
+        <div style="font-size:12px;color:var(--foliage);font-weight:600">
+          No tengo cuenta, quiero registrarme
+        </div>
+        <p class="note" style="margin-top:14px">
+          El inicio de sesión requiere internet solo la primera vez.
+          Después podrá registrar árboles sin conexión durante días.
+        </p>
+      </div>
+    </div>
+    <div class="cap"><b>Inicio de sesión</b><span>UX-00-LOGIN</span></div>
+  </div>
+
+  <!-- ============ 2. LOTES ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>▮▮▮ 87%</span></div>
+      <div class="body">
+        <div>
+          <h2 class="t">Lotes</h2>
+          <p class="sub" style="margin-top:3px">Toque un lote para trabajar en él</p>
+        </div>
+
+        <div class="card active">
+          <div class="row">
+            <b style="font-size:13.5px">Lote 1 · Ronda La Honda</b>
+            <span style="color:var(--mute);font-size:15px">✎</span>
+          </div>
+          <p class="sub" style="margin-top:3px">1,50 ha · 24 árboles</p>
+          <p style="font-family:var(--mono);font-size:9px;color:var(--foliage);margin-top:7px;letter-spacing:.05em">LOTE ACTIVO</p>
+          <div class="row" style="margin-top:10px">
+            <span style="font-size:11.5px">Supervivencia</span>
+            <span class="big">83 %</span>
+          </div>
+          <div class="prog" style="margin-top:5px"><i style="width:83%"></i></div>
+          <p class="err" style="margin-top:6px">2 individuos no encontrados</p>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <b style="font-size:13.5px">Lote 2 · Alto de la Cruz</b>
+            <span style="color:var(--mute);font-size:15px">✎</span>
+          </div>
+          <p class="sub" style="margin-top:3px">0,80 ha · 9 árboles</p>
+          <div style="margin-top:7px"><span class="tag t-pend"><i></i>PENDIENTE</span></div>
+          <p class="warn" style="margin-top:9px">Cobertura del 22 %: aún insuficiente para concluir</p>
+        </div>
+
+        <div class="card">
+          <b style="font-size:13.5px">Lote 3 · Vereda El Tabor</b>
+          <p class="sub" style="margin-top:3px">2,10 ha · 0 árboles</p>
+          <p class="sub" style="margin-top:9px">Sin monitoreos todavía</p>
+        </div>
+      </div>
+      <div class="fab">+</div>
+      <div class="bar">
+        <div class="tab on"><span class="ic">🌳</span>Lotes</div>
+        <div class="tab"><span class="ic">＋</span>Registrar</div>
+        <div class="tab"><span class="ic">📋</span>Monitorear</div>
+        <div class="tab"><span class="badge">3</span><span class="ic">☁</span>Sincronizar</div>
+      </div>
+    </div>
+    <div class="cap"><b>Listado de lotes</b><span>UX-01-LOTES</span></div>
+  </div>
+
+  <!-- ============ 3. FORMULARIO DE LOTE ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>▮▮▮ 87%</span></div>
+      <div class="body" style="filter:blur(1.2px);opacity:.55">
+        <h2 class="t">Lotes</h2>
+        <div class="card active" style="height:120px"></div>
+        <div class="card" style="height:90px"></div>
+      </div>
+      <div class="bar" style="filter:blur(1.2px);opacity:.55">
+        <div class="tab on"><span class="ic">🌳</span>Lotes</div>
+        <div class="tab"><span class="ic">＋</span>Registrar</div>
+        <div class="tab"><span class="ic">📋</span>Monitorear</div>
+        <div class="tab"><span class="ic">☁</span>Sincronizar</div>
+      </div>
+      <div class="scrim">
+        <div class="modal">
+          <h3>Nuevo lote</h3>
+          <div class="field"><span class="fl">Nombre del lote</span>Lote 4 · Quebrada Seca</div>
+          <div class="field"><span class="fl">Área (hectáreas)</span>1,25</div>
+          <p class="lbl" style="margin-top:2px">Centroide del lote</p>
+          <div style="display:flex;gap:7px">
+            <div class="field" style="flex:1"><span class="fl">Latitud</span>6,18923</div>
+            <div class="field" style="flex:1"><span class="fl">Longitud</span>-75,21534</div>
+          </div>
+          <div class="btn ghost">◎  Usar mi ubicación</div>
+          <div class="acts"><span class="mute">Cancelar</span><span>Guardar</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cap"><b>Crear o editar lote</b><span>UX-02-LOTE-FORM</span></div>
+  </div>
+
+  <!-- ============ 4. REGISTRO ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>✈  ▮▮▮ 71%</span></div>
+      <div class="body">
+        <div>
+          <h2 class="t">Registrar árbol</h2>
+          <p class="sub" style="margin-top:3px">Lote 1 · Ronda La Honda</p>
+        </div>
+
+        <p class="lbl">Especie</p>
+        <div class="chips">
+          <span class="chip on">Nogal cafetero</span>
+          <span class="chip">Roble andino</span>
+          <span class="chip">Guamo</span>
+        </div>
+
+        <p class="lbl">Ubicación</p>
+        <div class="card">
+          <b style="font-size:13.5px">6,18941 · -75,21502</b>
+          <p style="font-size:11.5px;color:var(--foliage);margin-top:3px">Precisión: ±6 m</p>
+          <div class="btn ghost" style="margin-top:9px;padding:8px">Repetir lectura</div>
+        </div>
+
+        <p class="lbl">Fotografía</p>
+        <div class="card">
+          <div class="photo">fotografía del individuo</div>
+          <p style="font-size:11.5px;color:var(--foliage);font-weight:600;margin-top:7px">Quitar y repetir</p>
+        </div>
+
+        <div class="btn">Registrar árbol</div>
+        <p class="note">Se guarda en el teléfono de inmediato. La subida ocurre sola cuando aparezca señal.</p>
+      </div>
+      <div class="bar">
+        <div class="tab"><span class="ic">🌳</span>Lotes</div>
+        <div class="tab on"><span class="ic">＋</span>Registrar</div>
+        <div class="tab"><span class="ic">📋</span>Monitorear</div>
+        <div class="tab"><span class="badge">4</span><span class="ic">☁</span>Sincronizar</div>
+      </div>
+    </div>
+    <div class="cap"><b>Registro de siembra · sin señal</b><span>UX-03-REGISTRO</span></div>
+  </div>
+
+  <!-- ============ 5. MONITOREO ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>✈  ▮▮▮ 71%</span></div>
+      <div class="body" style="filter:blur(1.2px);opacity:.55">
+        <h2 class="t">Monitoreo</h2>
+        <div class="card" style="height:70px"></div>
+        <div class="card" style="height:70px"></div>
+        <div class="card" style="height:70px"></div>
+      </div>
+      <div class="bar" style="filter:blur(1.2px);opacity:.55">
+        <div class="tab"><span class="ic">🌳</span>Lotes</div>
+        <div class="tab"><span class="ic">＋</span>Registrar</div>
+        <div class="tab on"><span class="ic">📋</span>Monitorear</div>
+        <div class="tab"><span class="ic">☁</span>Sincronizar</div>
+      </div>
+      <div class="scrim">
+        <div class="modal">
+          <h3>Registrar visita</h3>
+          <p class="lbl">Estado del individuo</p>
+          <div class="chips">
+            <span class="chip on">Vivo</span>
+            <span class="chip">Muerto</span>
+            <span class="chip">No hallado</span>
+          </div>
+          <div class="field"><span class="fl">Altura (cm)</span>145</div>
+          <div class="field"><span class="fl">Diámetro del tallo (mm)</span>22</div>
+          <div class="field"><span class="fl">Observaciones</span>Rebrote sano, sin plagas</div>
+          <div class="acts"><span class="mute">Cancelar</span><span>Guardar visita</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cap"><b>Monitoreo de individuo</b><span>UX-04-MONITOREO</span></div>
+  </div>
+
+  <!-- ============ 6. SINCRONIZACIÓN ============ -->
+  <div class="item">
+    <div class="phone">
+      <div class="status"><span>9:41</span><span>▮▮▮ 68%</span></div>
+      <div class="body">
+        <h2 class="t">4 registros esperan conexión</h2>
+
+        <div class="card" style="background:rgba(201,162,39,.16)">
+          <b style="font-size:13px;color:#8A6F1B">Sin conexión</b>
+          <p class="note" style="margin-top:4px">
+            Los registros se guardan en el teléfono. Ninguno se pierde entretanto.
+          </p>
+        </div>
+
+        <div class="btn off">Sincronizar ahora</div>
+
+        <div class="card w">
+          <b style="font-size:12.5px">Siembra a3f19c04</b>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--mute);margin:3px 0 7px">6,18941 · -75,21502 · ±6 m</p>
+          <span class="tag t-pend"><i></i>PENDIENTE</span>
+        </div>
+        <div class="card w">
+          <b style="font-size:12.5px">Siembra 7b20de55</b>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--mute);margin:3px 0 7px">6,18952 · -75,21488 · ±5 m</p>
+          <span class="tag t-pend"><i></i>PENDIENTE</span>
+        </div>
+        <div class="card w">
+          <b style="font-size:12.5px">Siembra 0c84fa17</b>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--mute);margin:3px 0 7px">6,18930 · -75,21511 · ±8 m</p>
+          <span class="tag t-conf"><i></i>EN CONFLICTO</span>
+        </div>
+      </div>
+      <div class="bar">
+        <div class="tab"><span class="ic">🌳</span>Lotes</div>
+        <div class="tab"><span class="ic">＋</span>Registrar</div>
+        <div class="tab"><span class="ic">📋</span>Monitorear</div>
+        <div class="tab on"><span class="badge">4</span><span class="ic">☁</span>Sincronizar</div>
+      </div>
+    </div>
+    <div class="cap"><b>Estado de sincronización</b><span>UX-05-SYNC</span></div>
+  </div>
+
+</div>
+</body>
+</html>

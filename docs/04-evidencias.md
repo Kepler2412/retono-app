@@ -6,14 +6,18 @@
 
 ## 1. Prototipo UX/UI (objetivo específico 1)
 
-| Pantalla | Captura | Enlace en Figma |
-|---|---|---|
-| Inicio de sesión | `diagramas/ux-00-login.png` | |
-| Listado de lotes | `diagramas/ux-01-lotes.png` | |
-| Formulario de lote | `diagramas/ux-02-lote-form.png` | |
-| Registro de siembra | `diagramas/ux-03-registro.png` | |
-| Monitoreo de individuo | `diagramas/ux-04-monitoreo.png` | |
-| Estado de sincronización | `diagramas/ux-05-sync.png` | |
+Las maquetas de alta fidelidad están en `mockups/`, y el sistema de diseño completo en `06-diseno-ux.md`.
+
+| Pantalla | Maqueta | Captura de la app real | Enlace en Figma |
+|---|---|---|---|
+| Inicio de sesión | ☑ `mockups/ux-00-login.png` | | |
+| Listado de lotes | ☑ `mockups/ux-01-lotes.png` | | |
+| Formulario de lote | ☑ `mockups/ux-02-lote-form.png` | | |
+| Registro de siembra | ☑ `mockups/ux-03-registro.png` | | |
+| Monitoreo de individuo | ☑ `mockups/ux-04-monitoreo.png` | | |
+| Estado de sincronización | ☑ `mockups/ux-05-sync.png` | | |
+
+> Complete la columna de capturas con la aplicación en ejecución. Frente a un jurado, una captura del sistema funcionando pesa más que una maqueta.
 
 ### Evaluación heurística de Nielsen
 
