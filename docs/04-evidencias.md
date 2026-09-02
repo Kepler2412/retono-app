@@ -9,7 +9,7 @@
 Las maquetas de alta fidelidad están en `mockups/`, y el sistema de diseño completo en `06-diseno-ux.md`.
 
 | Pantalla | Maqueta | Captura de la app real | 
-|---|---|---|---|
+|---|---|---|
 | Inicio de sesión | ☑ `mockups/ux-00-login.png` | | 
 | Listado de lotes | ☑ `mockups/ux-01-lotes.png` | | 
 | Formulario de lote | ☑ `mockups/ux-02-lote-form.png` | | 
