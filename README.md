@@ -286,7 +286,7 @@ La forma correcta de probar el núcleo del proyecto:
 
 | Sprint | Alcance | Estado |
 |---|---|---|
-| Sprint 0 | Descubrimiento y prototipado en Figma | 🟡 En curso |
+| Sprint 0 | Descubrimiento y prototipado | 🟢 Implementado |
 | Sprint 1 | Persistencia local cifrada y registro offline | 🟢 Implementado |
 | Sprint 2 | GPS validado, fotografía procesada y monitoreo de supervivencia | 🟢 Implementado |
 | Sprint 3 | Sincronización con Firestore y autenticación | 🟢 Implementado |
